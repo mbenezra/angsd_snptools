@@ -10,3 +10,4 @@ cat bams.list | head -n 80 | tail -n 20 | parallel /willerslev/software/snptools
 wait
 cat bams.list | head -n 90 | tail -n 10 | parallel /willerslev/software/snptools/pileup
 
+for bam in `cat bams.list`; do /willerslev/software/snptools/pileup $bam; done

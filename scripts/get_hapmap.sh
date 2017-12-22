@@ -21,13 +21,13 @@ angsd/angsd sites index hapmap/sites.txt
 # 1..22 in recode format
 for number in {1..22}; do vcftools --gzvcf hapmap/hapmap_3.3.hg19.vcf.gz --keep indv.txt --chr chr$number --max-alleles 2 --recode --out hapmap/hapmap_3.3.CEU.chr$number.hg19; done
 
-for number in {1..22}; do gzip --keep hapmap/hapmap_3.3.CEU.chr$number.hg19.recode.vcf; done
+for number in {1..22}; do gzip -c hapmap/hapmap_3.3.CEU.chr$number.hg19.recode.vcf > hapmap/hapmap_3.3.CEU.chr$number.hg19.recode.vcf.zip; done
 
 for number in {1..22}; do awk '{gsub(/^chr/,""); print}' hapmap/hapmap_3.3.CEU.chr$number.hg19.recode.vcf > hapmap/hapmap_3.3.CEU.chr$number.hg19.vcf; done
 
-for number in {1..22}; do gzip --keep hapmap/hapmap_3.3.CEU.chr$number.hg19.vcf; done
+for number in {1..22}; do gzip -c hapmap/hapmap_3.3.CEU.chr$number.hg19.vcf > hapmap/hapmap_3.3.CEU.chr$number.hg19.vcf.zip; done
 
 # one file in recode format
 vcftools --gzvcf hapmap/hapmap_3.3.hg19.vcf.gz --keep indv.txt --not-chr chrX --max-alleles 2 --recode --out hapmap/hapmap_3.3.CEU.hg19
 
-gzip --keep hapmap/hapmap_3.3.CEU.hg19.recode.vcf
+gzip -c hapmap/hapmap_3.3.CEU.hg19.recode.vcf > hapmap/hapmap_3.3.CEU.hg19.recode.vcf.zip
