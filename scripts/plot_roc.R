@@ -59,32 +59,32 @@ getPos <- function(true, gt) {
   return(pos)
 }
 
-indv <- read.table("../indv.txt")[,1]
+indv <- read.table("indv.txt")[,1]
 
-hapmap.hg19 <- loadIt("../hapmap/hapmap.hg19.gt.gz", indv)
+hapmap.hg19 <- loadIt("hapmap/hapmap.hg19.gt.gz", indv)
 
-snptools.uni.gt <- loadIt("../snptools/snptools.uni.hg19.gt.gz", indv)
-snptools.uni.gl <- loadIt("../snptools/snptools.uni.hg19.gl.gz", indv)
-snptools.freq.gt <- loadIt("../snptools/snptools.freq.hg19.gt.gz", indv)
-snptools.freq.gl <- loadIt("../snptools/snptools.freq.hg19.gl.gz", indv)
+snptools.uni.gt <- loadIt("geno_snptools_uni/snptools.uni.hg19.gt.gz", indv)
+snptools.uni.gl <- loadIt("geno_snptools_uni/snptools.uni.hg19.gl.gz", indv)
+snptools.freq.gt <- loadIt("geno_snptools_freq/snptools.freq.hg19.gt.gz", indv)
+snptools.freq.gl <- loadIt("geno_snptools_freq/snptools.freq.hg19.gl.gz", indv)
 
 pos <- getPos(hapmap.hg19, snptools.uni.gt)
 
-angsd.uni.gt <- loadIt("../angsd/angsd.uni.hg19.gt.gz", indv)
-angsd.uni.gl <- loadIt("../angsd/angsd.uni.hg19.gl.gz", indv)
-angsd.freq.gt <- loadIt("../angsd/angsd.freq.hg19.gt.gz", indv)
-angsd.freq.gl <- loadIt("../angsd/angsd.freq.hg19.gl.gz", indv)
+sam.uni.gt <- loadIt("geno_sam_uni/sam.uni.hg19.gt.gz", indv)
+sam.uni.gl <- loadIt("geno_sam_uni/sam.uni.hg19.gl.gz", indv)
+sam.freq.gt <- loadIt("geno_sam_freq/sam.freq.hg19.gt.gz", indv)
+sam.freq.gl <- loadIt("geno_sam_freq/sam.freq.hg19.gl.gz", indv)
 
-gatk.uni.gt <- loadIt("../gatk/gatk.uni.hg19.gt.gz", indv)
-gatk.uni.gl <- loadIt("../gatk/gatk.uni.hg19.gl.gz", indv)
-gatk.freq.gt <- loadIt("../gatk/gatk.freq.hg19.gt.gz", indv)
-gatk.freq.gl <- loadIt("../gatk/gatk.freq.hg19.gl.gz", indv)
+gatk.uni.gt <- loadIt("geno_gatk_uni/gatk.uni.hg19.gt.gz", indv)
+gatk.uni.gl <- loadIt("geno_gatk_uni/gatk.uni.hg19.gl.gz", indv)
+gatk.freq.gt <- loadIt("geno_gatk_freq/gatk.freq.hg19.gt.gz", indv)
+gatk.freq.gl <- loadIt("geno_gatk_freq/gatk.freq.hg19.gl.gz", indv)
 
 snptools.uni.roc <- comp(hapmap.hg19, snptools.uni.gt, snptools.uni.gl, pos)
 snptools.freq.roc <- comp(hapmap.hg19, snptools.freq.gt, snptools.freq.gl, pos)
 
-angsd.uni.roc <- comp(hapmap.hg19, angsd.uni.gt, angsd.uni.gl, pos)
-angsd.freq.roc <- comp(hapmap.hg19, angsd.freq.gt, angsd.freq.gl, pos)
+sam.uni.roc <- comp(hapmap.hg19, sam.uni.gt, sam.uni.gl, pos)
+sam.freq.roc <- comp(hapmap.hg19, sam.freq.gt, sam.freq.gl, pos)
 
 gatk.uni.roc <- comp(hapmap.hg19, gatk.uni.gt, gatk.uni.gl, pos)
 gatk.freq.roc <- comp(hapmap.hg19, gatk.freq.gt, gatk.freq.gl, pos)
@@ -95,8 +95,8 @@ gatk.freq.roc <- comp(hapmap.hg19, gatk.freq.gt, gatk.freq.gl, pos)
 plot(snptools.uni.roc$callrate, snptools.uni.roc$errorrate, main = "Error rate vs call rate for called genotypes", xlab = "Call rate", ylab = "Error rate", col = 1, type = "l", xlim = c(0, 1), ylim = c(0, 0.05))
 lines(snptools.freq.roc$callrate, snptools.freq.roc$errorrate, col = 2, type = "l")
 
-lines(angsd.uni.roc$callrate, angsd.uni.roc$errorrate, col = 3, type = "l")
-lines(angsd.freq.roc$callrate, angsd.freq.roc$errorrate, col = 4, type = "l")
+lines(sam.uni.roc$callrate, sam.uni.roc$errorrate, col = 3, type = "l")
+lines(sam.freq.roc$callrate, sam.freq.roc$errorrate, col = 4, type = "l")
 
 lines(gatk.uni.roc$callrate, gatk.uni.roc$errorrate, col = 5, type = "l")
 lines(gatk.freq.roc$callrate, gatk.freq.roc$errorrate, col = 6, type = "l")
