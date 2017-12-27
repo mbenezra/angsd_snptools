@@ -17,7 +17,7 @@ do
 	gzip -c geno_snptools_freq/snptools.freq.chr$number.mm > geno_snptools_freq/snptools.freq.chr$number.mm.gz
 done
 
-cat geno_snptools_freq/sam.chr{1..22}.gt > geno_snptools_freq/snptools.freq.hg19.gt
+cat geno_snptools_freq/snptools.freq.chr{1..22}.gt > geno_snptools_freq/snptools.freq.hg19.gt
 gzip -c geno_snptools_freq/snptools.freq.hg19.gt > geno_snptools_freq/snptools.freq.hg19.gt.gz
 cat geno_snptools_freq/snptools.freq.chr{1..22}.gl > geno_snptools_freq/snptools.freq.hg19.gl
 gzip -c geno_snptools_freq/snptools.freq.hg19.gl > geno_snptools_freq/snptools.freq.hg19.gl.gz

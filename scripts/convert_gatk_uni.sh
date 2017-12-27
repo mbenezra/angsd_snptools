@@ -17,7 +17,7 @@ do
 	gzip -c geno_gatk_uni/gatk.uni.chr$number.mm > geno_gatk_uni/gatk.uni.chr$number.mm.gz
 done
 
-cat geno_gatk_uni/gatk.chr{1..22}.gt > geno_gatk_uni/gatk.uni.hg19.gt
+cat geno_gatk_uni/gatk.uni.chr{1..22}.gt > geno_gatk_uni/gatk.uni.hg19.gt
 gzip -c geno_gatk_uni/gatk.uni.hg19.gt > geno_gatk_uni/gatk.uni.hg19.gt.gz
 cat geno_gatk_uni/gatk.uni.chr{1..22}.gl > geno_gatk_uni/gatk.uni.hg19.gl
 gzip -c geno_gatk_uni/gatk.uni.hg19.gl > geno_gatk_uni/gatk.uni.hg19.gl.gz

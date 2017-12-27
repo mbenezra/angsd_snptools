@@ -17,7 +17,7 @@ do
 	gzip -c geno_sam_uni/sam.uni.chr$number.mm > geno_sam_uni/sam.uni.chr$number.mm.gz
 done
 
-cat geno_sam_uni/sam.chr{1..22}.gt > geno_sam_uni/sam.uni.hg19.gt
+cat geno_sam_uni/sam.uni.chr{1..22}.gt > geno_sam_uni/sam.uni.hg19.gt
 gzip -c geno_sam_uni/sam.uni.hg19.gt > geno_sam_uni/sam.uni.hg19.gt.gz
 cat geno_sam_uni/sam.uni.chr{1..22}.gl > geno_sam_uni/sam.uni.hg19.gl
 gzip -c geno_sam_uni/sam.uni.hg19.gl > geno_sam_uni/sam.uni.hg19.gl.gz
