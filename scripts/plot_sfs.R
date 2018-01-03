@@ -13,12 +13,15 @@ colnames(res) <- 1:20
 res <- t(apply(res,1,nnorm))
 
 #plot the none ancestral sites
+png('realSFS_non_ancestral_sites.png',width=1024,height=1024)
 barplot(res,beside=T,legend=c("GATK","SAMTOOLS","SNPTOOLS"),names=1:20,main="realSFS non ancestral sites")
+dev.off()
 
 #plot the polymorphic sites.
 resPoly <- t(apply(res[,-20],1,nnorm))
+png('realSFS_ploymorphic_sites.png',width=1024,height=1024)
 barplot(resPoly,beside=T,legend=c("GATK","SAMTOOLS","SNPTOOLS"),names=1:19,main="realSFS polymorphic sites")
-
+dev.off()
 #due the very limited amount of data lets
 #downsample to 5 individuals (10 chromosome) and exclude fixed derived
 downsampleSFS <- function(x,chr){ #x 1:2n , chr < 2n
@@ -27,6 +30,6 @@ downsampleSFS <- function(x,chr){ #x 1:2n , chr < 2n
     nnorm( as.vector(t(mat) %*% x)[-chr] )
 }
 resDown <- t(apply(res,1,downsampleSFS,chr=10))
+png('realSFS_downsampled_ploymorphic_sites.png',width=1024,height=1024)
 barplot(resDown,beside=T,legend=c("GATK","SAMTOOLS","SNPTOOLS"),names=1:9,main="realSFS downsampled polymorphic sites")
-
-
+dev.off()

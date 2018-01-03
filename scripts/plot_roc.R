@@ -54,7 +54,8 @@ loadIt <- function(file, indv) {
 }
 
 loadIt2 <- function(file, indv) {
-  it <- read.table(file) [-368490,]
+#  it <- read.table(file) [-368490,]
+  it <- read.table(file)[c(1:1000),]
   row.names(it) <- paste(it[,1], it[,2], sep = "_")
   it <- it[,-c(1,2)]
   names(it) <- indv
@@ -88,18 +89,19 @@ gatk.uni.gl <- loadIt("geno_gatk_uni/gatk.uni.hg19.gl.gz", indv)
 gatk.freq.gt <- loadIt("geno_gatk_freq/gatk.freq.hg19.gt.gz", indv)
 gatk.freq.gl <- loadIt("geno_gatk_freq/gatk.freq.hg19.gl.gz", indv)
 
-snptools.uni.roc <- comp(hapmap.hg19, snptools.uni.gt, snptools.uni.gl, pos)
-snptools.freq.roc <- comp(hapmap.hg19, snptools.freq.gt, snptools.freq.gl, pos)
+snptools.uni.roc <- roc(hapmap.hg19, snptools.uni.gt, snptools.uni.gl, pos)
+snptools.freq.roc <- roc(hapmap.hg19, snptools.freq.gt, snptools.freq.gl, pos)
 
-sam.uni.roc <- comp(hapmap.hg19, sam.uni.gt, sam.uni.gl, pos)
-sam.freq.roc <- comp(hapmap.hg19, sam.freq.gt, sam.freq.gl, pos)
+sam.uni.roc <- roc(hapmap.hg19, sam.uni.gt, sam.uni.gl, pos)
+sam.freq.roc <- roc(hapmap.hg19, sam.freq.gt, sam.freq.gl, pos)
 
-gatk.uni.roc <- comp(hapmap.hg19, gatk.uni.gt, gatk.uni.gl, pos)
-gatk.freq.roc <- comp(hapmap.hg19, gatk.freq.gt, gatk.freq.gl, pos)
+gatk.uni.roc <- roc(hapmap.hg19, gatk.uni.gt, gatk.uni.gl, pos)
+gatk.freq.roc <- roc(hapmap.hg19, gatk.freq.gt, gatk.freq.gl, pos)
 
 # size <- length(snptools.uni.roc$spe)
 # samp <- sort(sample(size,floor(size/100), replace = F))
 
+png('myroc.png',width=1024,height=1024)
 plot(snptools.uni.roc$callrate, snptools.uni.roc$errorrate, main = "Error rate vs call rate for called genotypes", xlab = "Call rate", ylab = "Error rate", col = 1, type = "l", xlim = c(0, 1), ylim = c(0, 0.05))
 lines(snptools.freq.roc$callrate, snptools.freq.roc$errorrate, col = 2, type = "l")
 
@@ -110,4 +112,4 @@ lines(gatk.uni.roc$callrate, gatk.uni.roc$errorrate, col = 5, type = "l")
 lines(gatk.freq.roc$callrate, gatk.freq.roc$errorrate, col = 6, type = "l")
 
 legend("topleft", c("SNPTOOLS uniform", "SNPTOOLS allele freq", "SAMTOOLS uniform", "SAMTOOLS allele freq", "GATK uniform", "GATK allele freq"), lwd = c(1,1,1,1,1,1), lty = c(1,1,1,1,1,1), col=c(1,2,3,4,5,6))
-
+dev.off()

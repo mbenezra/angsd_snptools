@@ -23,4 +23,4 @@ head -n 10 indv.txt > prob2vcf/indv10.txt
 
 vcftools --gzvcf prob2vcf/out.vcf.gz --keep prob2vcf/indv10.txt --recode --out prob2vcf/10indv.out
 
-gzip -c prob2vcf/10indv.out.recode.vcf > prob2vcf/10indv.out.recode.vcf.zip
+gzip -c prob2vcf/10indv.out.recode.vcf > prob2vcf/10indv.out.recode.vcf.gz
