@@ -46,7 +46,7 @@ comp <- function(true, gt, gl, pos){
 }
 
 loadIt <- function(file, indv) {
-  it <- read.table(file)[c(1:5000),]
+  it <- read.table(file) #[c(1:5000),]
   row.names(it) <- paste(it[,1], it[,2], sep = "_")
   it <- it[,-c(1,2)]
   names(it) <- indv
@@ -70,33 +70,33 @@ getPos <- function(true, gt) {
 
 indv <- read.table("indv.txt")[,1]
 
-hapmap.hg19 <- loadIt("collect/hapmap.hg19.gt.gz", indv)
+hapmap.hg19 <- loadIt("final/hapmap.hg19.gt", indv)
 
-snptools.uni.gt <- loadIt("geno_snptools_uni/snptools.uni.hg19.gt.gz", indv)
-snptools.uni.gl <- loadIt("geno_snptools_uni/snptools.uni.hg19.gl.gz", indv)
-snptools.freq.gt <- loadIt("geno_snptools_freq/snptools.freq.hg19.gt.gz", indv)
-snptools.freq.gl <- loadIt("geno_snptools_freq/snptools.freq.hg19.gl.gz", indv)
+snptools.uni.gt <- loadIt("final/snptools.uni.hg19.gt", indv)
+snptools.uni.gl <- loadIt("final/snptools.uni.hg19.gl", indv)
+snptools.freq.gt <- loadIt("final/snptools.freq.hg19.gt", indv)
+snptools.freq.gl <- loadIt("final/snptools.freq.hg19.gl", indv)
 
 pos <- getPos(hapmap.hg19, snptools.uni.gt)
 
-sam.uni.gt <- loadIt("geno_sam_uni/sam.uni.hg19.gt.gz", indv)
-sam.uni.gl <- loadIt("geno_sam_uni/sam.uni.hg19.gl.gz", indv)
-sam.freq.gt <- loadIt("geno_sam_freq/sam.freq.hg19.gt.gz", indv)
-sam.freq.gl <- loadIt("geno_sam_freq/sam.freq.hg19.gl.gz", indv)
+sam.uni.gt <- loadIt("final/sam.uni.hg19.gt", indv)
+sam.uni.gl <- loadIt("final/sam.uni.hg19.gl", indv)
+sam.freq.gt <- loadIt("final/sam.freq.hg19.gt", indv)
+sam.freq.gl <- loadIt("final/sam.freq.hg19.gl", indv)
 
-gatk.uni.gt <- loadIt("geno_gatk_uni/gatk.uni.hg19.gt.gz", indv)
-gatk.uni.gl <- loadIt("geno_gatk_uni/gatk.uni.hg19.gl.gz", indv)
-gatk.freq.gt <- loadIt("geno_gatk_freq/gatk.freq.hg19.gt.gz", indv)
-gatk.freq.gl <- loadIt("geno_gatk_freq/gatk.freq.hg19.gl.gz", indv)
+gatk.uni.gt <- loadIt("final/gatk.uni.hg19.gt", indv)
+gatk.uni.gl <- loadIt("final/gatk.uni.hg19.gl", indv)
+gatk.freq.gt <- loadIt("final/gatk.freq.hg19.gt", indv)
+gatk.freq.gl <- loadIt("final/gatk.freq.hg19.gl", indv)
 
-snptools.uni.roc <- roc(hapmap.hg19, snptools.uni.gt, snptools.uni.gl, pos)
-snptools.freq.roc <- roc(hapmap.hg19, snptools.freq.gt, snptools.freq.gl, pos)
+snptools.uni.roc <- comp(hapmap.hg19, snptools.uni.gt, snptools.uni.gl, pos)
+snptools.freq.roc <- comp(hapmap.hg19, snptools.freq.gt, snptools.freq.gl, pos)
 
-sam.uni.roc <- roc(hapmap.hg19, sam.uni.gt, sam.uni.gl, pos)
-sam.freq.roc <- roc(hapmap.hg19, sam.freq.gt, sam.freq.gl, pos)
+sam.uni.roc <- comp(hapmap.hg19, sam.uni.gt, sam.uni.gl, pos)
+sam.freq.roc <- comp(hapmap.hg19, sam.freq.gt, sam.freq.gl, pos)
 
-gatk.uni.roc <- roc(hapmap.hg19, gatk.uni.gt, gatk.uni.gl, pos)
-gatk.freq.roc <- roc(hapmap.hg19, gatk.freq.gt, gatk.freq.gl, pos)
+gatk.uni.roc <- comp(hapmap.hg19, gatk.uni.gt, gatk.uni.gl, pos)
+gatk.freq.roc <- comp(hapmap.hg19, gatk.freq.gt, gatk.freq.gl, pos)
 
 # size <- length(snptools.uni.roc$spe)
 # samp <- sort(sample(size,floor(size/100), replace = F))
