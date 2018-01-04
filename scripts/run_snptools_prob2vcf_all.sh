@@ -9,7 +9,7 @@ cat prob2vcf_all.txt | parallel
 
 vcf-concat {1..22}.out.vcf.gz | gzip -c > out.vcf.gz
 
-for number in {1..22}; do less -S $number.out.vcf.gz | grep -P "^$number\t" | awk '{print $1"\t"$2}' > $number.sites.txt; done
+for number in {1..22}; do less -S $number.out.vcf.gz | grep -P "^$number\t" | awk '{print $1"\t"$2"\t"$4"\t"$5}' > $number.sites.txt; done
 
 for number in {1..22}; do ../angsd/angsd sites index $number.sites.txt; done
 
