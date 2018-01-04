@@ -1,10 +1,10 @@
-roc <- function(true, gt, gl, pos){
+roc <- function(true, gt, gl){
   # ta <- table(c(unique(row.names(true)),unique(row.names(gt))))
   # pos <- names(ta[ta==2])
   
-  true <- true[row.names(true)%in%pos,]
-  gt <- gt[row.names(gt)%in%pos,]
-  gl <- gl[row.names(gl)%in%pos,]
+  # true <- true[row.names(true)%in%pos,]
+  # gt <- gt[row.names(gt)%in%pos,]
+  # gl <- gl[row.names(gl)%in%pos,]
   
   true <- as.vector(unlist(true))
   gt <- as.vector(unlist(gt))
@@ -53,63 +53,63 @@ loadIt <- function(file, indv) {
   return(it)
 }
 
-loadIt2 <- function(file, indv) {
-#  it <- read.table(file) [-368490,]
-  it <- read.table(file)[c(1:1000),]
-  row.names(it) <- paste(it[,1], it[,2], sep = "_")
-  it <- it[,-c(1,2)]
-  names(it) <- indv
-  return(it)
-}
-
-getPos <- function(true, gt) {
-  ta <- table(c(unique(row.names(true)),unique(row.names(gt))))
-  pos <- names(ta[ta==2])
-  return(pos)
-}
+# loadIt2 <- function(file, indv) {
+# #  it <- read.table(file) [-368490,]
+#   it <- read.table(file)[c(1:1000),]
+#   row.names(it) <- paste(it[,1], it[,2], sep = "_")
+#   it <- it[,-c(1,2)]
+#   names(it) <- indv
+#   return(it)
+# }
+# 
+# getPos <- function(true, gt) {
+#   ta <- table(c(unique(row.names(true)),unique(row.names(gt))))
+#   pos <- names(ta[ta==2])
+#   return(pos)
+# }
 
 indv <- read.table("indv.txt")[,1]
 
-hapmap.hg19 <- loadIt("final/hapmap.hg19.gt", indv)
+hapmap.hg19 <- loadIt("final/hapmap.hg19.gt.gz", indv)
 
-snptools.uni.gt <- loadIt("final/snptools.uni.hg19.gt", indv)
-snptools.uni.gl <- loadIt("final/snptools.uni.hg19.gl", indv)
-snptools.freq.gt <- loadIt("final/snptools.freq.hg19.gt", indv)
-snptools.freq.gl <- loadIt("final/snptools.freq.hg19.gl", indv)
+snptools.uni.gt <- loadIt("final/snptools.uni.hg19.gt.gz", indv)
+snptools.uni.gl <- loadIt("final/snptools.uni.hg19.gl.gz", indv)
+snptools.freq.gt <- loadIt("final/snptools.freq.hg19.gt.gz", indv)
+snptools.freq.gl <- loadIt("final/snptools.freq.hg19.gl.gz", indv)
 
 pos <- getPos(hapmap.hg19, snptools.uni.gt)
 
-sam.uni.gt <- loadIt("final/sam.uni.hg19.gt", indv)
-sam.uni.gl <- loadIt("final/sam.uni.hg19.gl", indv)
-sam.freq.gt <- loadIt("final/sam.freq.hg19.gt", indv)
-sam.freq.gl <- loadIt("final/sam.freq.hg19.gl", indv)
+sam.uni.gt <- loadIt("final/sam.uni.hg19.gt.gz", indv)
+sam.uni.gl <- loadIt("final/sam.uni.hg19.gl.gz", indv)
+sam.freq.gt <- loadIt("final/sam.freq.hg19.gt.gz", indv)
+sam.freq.gl <- loadIt("final/sam.freq.hg19.gl.gz", indv)
 
-gatk.uni.gt <- loadIt("final/gatk.uni.hg19.gt", indv)
-gatk.uni.gl <- loadIt("final/gatk.uni.hg19.gl", indv)
-gatk.freq.gt <- loadIt("final/gatk.freq.hg19.gt", indv)
-gatk.freq.gl <- loadIt("final/gatk.freq.hg19.gl", indv)
+gatk.uni.gt <- loadIt("final/gatk.uni.hg19.gt.gz", indv)
+gatk.uni.gl <- loadIt("final/gatk.uni.hg19.gl.gz", indv)
+gatk.freq.gt <- loadIt("final/gatk.freq.hg19.gt.gz", indv)
+gatk.freq.gl <- loadIt("final/gatk.freq.hg19.gl.gz", indv)
 
-snptools.uni.roc <- comp(hapmap.hg19, snptools.uni.gt, snptools.uni.gl, pos)
-snptools.freq.roc <- comp(hapmap.hg19, snptools.freq.gt, snptools.freq.gl, pos)
+snptools.uni.roc <- roc(hapmap.hg19, snptools.uni.gt, snptools.uni.gl)
+snptools.freq.roc <- roc(hapmap.hg19, snptools.freq.gt, snptools.freq.gl)
 
-sam.uni.roc <- comp(hapmap.hg19, sam.uni.gt, sam.uni.gl, pos)
-sam.freq.roc <- comp(hapmap.hg19, sam.freq.gt, sam.freq.gl, pos)
+sam.uni.roc <- roc(hapmap.hg19, sam.uni.gt, sam.uni.gl)
+sam.freq.roc <- roc(hapmap.hg19, sam.freq.gt, sam.freq.gl)
 
-gatk.uni.roc <- comp(hapmap.hg19, gatk.uni.gt, gatk.uni.gl, pos)
-gatk.freq.roc <- comp(hapmap.hg19, gatk.freq.gt, gatk.freq.gl, pos)
+gatk.uni.roc <- roc(hapmap.hg19, gatk.uni.gt, gatk.uni.gl)
+gatk.freq.roc <- roc(hapmap.hg19, gatk.freq.gt, gatk.freq.gl)
 
 # size <- length(snptools.uni.roc$spe)
 # samp <- sort(sample(size,floor(size/100), replace = F))
 
-png('myroc.png',width=1024,height=1024)
-plot(snptools.uni.roc$callrate, snptools.uni.roc$errorrate, main = "Error rate vs call rate for called genotypes", xlab = "Call rate", ylab = "Error rate", col = 1, type = "l", xlim = c(0, 1), ylim = c(0, 0.05))
-lines(snptools.freq.roc$callrate, snptools.freq.roc$errorrate, col = 2, type = "l")
+# png('myroc.png',width=1024,height=1024)
+plot(1-snptools.uni.roc$spe, 1-snptools.uni.roc$sen, main = "ROC curve", xlab = "False positive rate", ylab = "True positive rate", col = 1, type = "l", xlim = c(0, 1), ylim = c(0, 1))
+lines(1-snptools.freq.roc$spe, 1-snptools.freq.roc$sen, col = 2, type = "l")
 
-lines(sam.uni.roc$callrate, sam.uni.roc$errorrate, col = 3, type = "l")
-lines(sam.freq.roc$callrate, sam.freq.roc$errorrate, col = 4, type = "l")
+lines(1-sam.uni.roc$spe, 1-sam.uni.roc$sen, col = 3, type = "l")
+lines(1-sam.freq.roc$spe, 1-sam.freq.roc$sen, col = 4, type = "l")
 
-lines(gatk.uni.roc$callrate, gatk.uni.roc$errorrate, col = 5, type = "l")
-lines(gatk.freq.roc$callrate, gatk.freq.roc$errorrate, col = 6, type = "l")
+lines(1-gatk.uni.roc$spe, 1-gatk.uni.roc$sen, col = 5, type = "l")
+lines(1-gatk.freq.roc$spe, 1-gatk.freq.roc$sen, col = 6, type = "l")
 
-legend("topleft", c("SNPTOOLS uniform", "SNPTOOLS allele freq", "SAMTOOLS uniform", "SAMTOOLS allele freq", "GATK uniform", "GATK allele freq"), lwd = c(1,1,1,1,1,1), lty = c(1,1,1,1,1,1), col=c(1,2,3,4,5,6))
-dev.off()
+legend("bottomright", c("SNPTOOLS uniform", "SNPTOOLS allele freq", "SAMTOOLS uniform", "SAMTOOLS allele freq", "GATK uniform", "GATK allele freq"), lwd = c(1,1,1,1,1,1), lty = c(1,1,1,1,1,1), col=c(1,2,3,4,5,6))
+# dev.off()
