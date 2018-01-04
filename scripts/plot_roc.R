@@ -46,7 +46,7 @@ comp <- function(true, gt, gl, pos){
 }
 
 loadIt <- function(file, indv) {
-  it <- read.table(file) #[c(1:1000),]
+  it <- read.table(file)[c(1:5000),]
   row.names(it) <- paste(it[,1], it[,2], sep = "_")
   it <- it[,-c(1,2)]
   names(it) <- indv
@@ -70,7 +70,7 @@ getPos <- function(true, gt) {
 
 indv <- read.table("indv.txt")[,1]
 
-hapmap.hg19 <- loadIt2("hapmap/hapmap.hg19.gt.gz", indv)
+hapmap.hg19 <- loadIt("collect/hapmap.hg19.gt.gz", indv)
 
 snptools.uni.gt <- loadIt("geno_snptools_uni/snptools.uni.hg19.gt.gz", indv)
 snptools.uni.gl <- loadIt("geno_snptools_uni/snptools.uni.hg19.gl.gz", indv)
