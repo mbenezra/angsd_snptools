@@ -77,7 +77,7 @@ snptools.uni.gl <- loadIt("final/snptools.uni.hg19.gl.gz", indv)
 snptools.freq.gt <- loadIt("final/snptools.freq.hg19.gt.gz", indv)
 snptools.freq.gl <- loadIt("final/snptools.freq.hg19.gl.gz", indv)
 
-pos <- getPos(hapmap.hg19, snptools.uni.gt)
+# pos <- getPos(hapmap.hg19, snptools.uni.gt)
 
 sam.uni.gt <- loadIt("final/sam.uni.hg19.gt.gz", indv)
 sam.uni.gl <- loadIt("final/sam.uni.hg19.gl.gz", indv)
@@ -101,7 +101,7 @@ gatk.freq.roc <- roc(hapmap.hg19, gatk.freq.gt, gatk.freq.gl)
 # size <- length(snptools.uni.roc$spe)
 # samp <- sort(sample(size,floor(size/100), replace = F))
 
-# png('myroc.png',width=1024,height=1024)
+png('roc.png',width=1024,height=1024)
 plot(1-snptools.uni.roc$spe, 1-snptools.uni.roc$sen, main = "ROC curve", xlab = "False positive rate", ylab = "True positive rate", col = 1, type = "l", xlim = c(0, 1), ylim = c(0, 1))
 lines(1-snptools.freq.roc$spe, 1-snptools.freq.roc$sen, col = 2, type = "l")
 
@@ -112,4 +112,4 @@ lines(1-gatk.uni.roc$spe, 1-gatk.uni.roc$sen, col = 5, type = "l")
 lines(1-gatk.freq.roc$spe, 1-gatk.freq.roc$sen, col = 6, type = "l")
 
 legend("bottomright", c("SNPTOOLS uniform", "SNPTOOLS allele freq", "SAMTOOLS uniform", "SAMTOOLS allele freq", "GATK uniform", "GATK allele freq"), lwd = c(1,1,1,1,1,1), lty = c(1,1,1,1,1,1), col=c(1,2,3,4,5,6))
-# dev.off()
+dev.off()
