@@ -1,33 +1,90 @@
 ---
 title: Comparison and Validation of the SNPTools Genotype Likelihood Model Using Low
   Depth Data
-author: "Michael Ben Ezra"
-date: '2017-12-18'
+author: "Michael Ben Ezra (lxc844)"
+date: '2018-01-22'
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Abstract
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
-```
+# Introduction
 
-## Including Plots
+# Materials and Methods
 
-You can also embed plots, for example:
+## Github
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+https://github.com/mbenezra/angsd_snptools
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## 1000 Genomes Project Data (CEU population)
+
+## Analysis of next generation Sequencing Data (ANGSD)
+
+### GATK
+
+$$p(G|D)=\frac{p(G)p(D|G)}{p(D)}$$
+
+$$p(D|G)=\prod_{b\in{pileup}}p(b|G)$$
+
+$$p(b|G)=p(b|\{A_1,A_2\})=\frac{1}{2}p(b|A_1)+\frac{1}{2}p(b|A_2)$$
+
+$$p(b|A)=\left\{\begin{matrix}\frac{e}{3}:b\ne{A}\\1-e:b=A\end{matrix}\right.$$
+
+### SAMTOOLS
+
+## SNPTools
+
+### Effective Base Depth (EBD) calculation
+
+$$EBD_{s,g=A,C,G,T}=\sum_{k}^{K_s}(1-BaseQuality_k)\times (1-MappingQuality_k), for all k=g.$$
+
+### SNP Site Discovery (variance ratio statistic)
+
+$$VarianceRatioStatistic=\frac{\sum_{i=1}^{I}[a_{i}-e(a_{i}+r_{i})]^{2}-Te(1-e)}{\sum_{i=1}^{I}Min\left \{ [a_{i}-0(a_{i}+r_{i})]^{2},[a_{i}-\frac{1}{2}(a_{i}+r_{i})]^{2},[a_{i}-1(a_{i}+r_{i})]^{2} \right \}}$$
+
+$$a_{i}=EBD_{i,g=alternative allele}$$
+
+$$r_{i}=EBD_{i,g=reference allele}$$
+
+$$T=\sum_{i}^{I}(a_{i}+r_{i})$$
+
+$$e=\frac{\sum_{i}^{I}(a_{i})}{\sum_{i}^{I}(a_{i}+r_{i})}$$
+
+### GL estimation (BAM-specific Binomial Mixture Modelling BBMM)
+
+$$GL_{s,v=rr,ra,aa}=p(a_{s}|z_{s,v},p_{v})=Binomial(r_{s}+a_{s},p_{v})$$
+
+$$Binomial(r_{s}+a_{s},p_{v})=\begin{bmatrix}r_{s}+a_{s}\\ a_{s}\end{bmatrix}p_{v}^{a_{s}}(1-p_{v})^{r_{s}}$$
+# Results
+
+## Depth
+
+![optional caption text](../scripts/depth.png)
+
+## Receiver operating characteristic (ROC)
+
+![optional caption text](../scripts/roc.png)
+
+## Site Frequency Spectrum (SFS)
+
+![optional caption text](../scripts/sfs.png)
+
+# Discussion
+
+# References
+
+1.	Korneliussen TS, Albrechtsen A, Nielsen R. ANGSD: Analysis of Next Generation Sequencing Data. BMC Bioinformatics. 2014;15:356.
+
+2.	Nielsen R, Paul JS, Albrechtsen A, Song YS. Genotype and SNP calling from next-generation sequencing data. Nat Rev Genet. 2011;12(6):443-51.
+
+3.	Wang Y, Lu J, Yu J, Gibbs RA, Yu F. An integrative variant analysis pipeline for accurate genotype/haplotype inference in population NGS data. Genome Res. 2013;23(5):833-42.
+
+4. http://www.internationalgenome.org/
