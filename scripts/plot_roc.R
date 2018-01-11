@@ -17,7 +17,7 @@ roc <- function(true, gt, gl){
   sen <- cumsum(trueSet)/sum(trueSet)
   spe <- cumsum(!trueSet)/sum(!trueSet)
   
-  return (list("sen" = sen, "spe" = spe))
+  return (list("sen" = sen, "spe" = spe, "gl" = gl[ord]))
 }
 
 comp <- function(true, gt, gl, pos){
@@ -102,14 +102,34 @@ gatk.freq.roc <- roc(hapmap.hg19, gatk.freq.gt, gatk.freq.gl)
 # samp <- sort(sample(size,floor(size/100), replace = F))
 
 png('roc.png',width=1024,height=1024)
-plot(1-snptools.uni.roc$spe, 1-snptools.uni.roc$sen, main = "ROC curve", xlab = "False positive rate", ylab = "True positive rate", col = 1, type = "l", xlim = c(0, 1), ylim = c(0, 1))
+plot(1-snptools.uni.roc$spe, 1-snptools.uni.roc$sen, main = "ROC curve", xlab = "Specificity", ylab = "Sensitivity", col = 1, type = "l", xlim = c(0, 1), ylim = c(0, 1))
+# snptools.uni.roc.idx <-which.max(snptools.uni.roc$gl)
+# points(1-snptools.uni.roc$spe[snptools.uni.roc.idx], 1-snptools.uni.roc$sen[snptools.uni.roc.idx], pch = 22, cex = 2, col = 1)
+snptools.uni.roc.idx <-min(which(snptools.uni.roc$gl>0.95))
+points(1-snptools.uni.roc$spe[snptools.uni.roc.idx], 1-snptools.uni.roc$sen[snptools.uni.roc.idx], pch = 23, cex = 2, col = 1)
+# snptools.uni.roc.idx <-which.min(snptools.uni.roc$gl>0.5)
+# points(1-snptools.uni.roc$spe[snptools.uni.roc.idx], 1-snptools.uni.roc$sen[snptools.uni.roc.idx], pch = 24, cex = 2, col = 1)
+
 lines(1-snptools.freq.roc$spe, 1-snptools.freq.roc$sen, col = 2, type = "l")
+snptools.freq.roc.idx <-min(which(snptools.freq.roc$gl>0.95))
+points(1-snptools.freq.roc$spe[snptools.freq.roc.idx], 1-snptools.freq.roc$sen[snptools.freq.roc.idx], , pch = 23, cex = 2, col = 2)
 
 lines(1-sam.uni.roc$spe, 1-sam.uni.roc$sen, col = 3, type = "l")
+sam.uni.roc.idx <-min(which(sam.uni.roc$gl>0.95))
+points(1-sam.uni.roc$spe[sam.uni.roc.idx], 1-sam.uni.roc$sen[sam.uni.roc.idx], pch = 23, cex = 2, col = 3)
+
 lines(1-sam.freq.roc$spe, 1-sam.freq.roc$sen, col = 4, type = "l")
+sam.freq.roc.idx <-min(which(sam.freq.roc$gl>0.95))
+points(1-sam.freq.roc$spe[sam.freq.roc.idx], 1-sam.freq.roc$sen[sam.freq.roc.idx], pch = 23, cex = 2, col = 4)
 
 lines(1-gatk.uni.roc$spe, 1-gatk.uni.roc$sen, col = 5, type = "l")
-lines(1-gatk.freq.roc$spe, 1-gatk.freq.roc$sen, col = 6, type = "l")
+gatk.uni.roc.idx <-min(which(gatk.uni.roc$gl>0.95))
+points(1-gatk.uni.roc$spe[gatk.uni.roc.idx], 1-gatk.uni.roc$sen[gatk.uni.roc.idx], pch = 23, cex = 2, col = 5)
 
-legend("bottomright", c("SNPTOOLS uniform", "SNPTOOLS allele freq", "SAMTOOLS uniform", "SAMTOOLS allele freq", "GATK uniform", "GATK allele freq"), lwd = c(1,1,1,1,1,1), lty = c(1,1,1,1,1,1), col=c(1,2,3,4,5,6))
+lines(1-gatk.freq.roc$spe, 1-gatk.freq.roc$sen, col = 6, type = "l")
+gatk.freq.roc.idx <-min(which(gatk.freq.roc$gl>0.95))
+points(1-gatk.freq.roc$spe[gatk.freq.roc.idx], 1-gatk.freq.roc$sen[gatk.freq.roc.idx], pch = 23, cex = 2, col = 6)
+
+legend("bottomright", c("SNPTOOLS uniform", "SNPTOOLS allele freq posterior", "SAMTOOLS uniform posterior", "SAMTOOLS allele freq posterior", "GATK uniform posterior", "GATK allele freq posterior"), lwd = c(1,1,1,1,1,1), lty = c(1,1,1,1,1,1), col=c(1,2,3,4,5,6), pch=c(23,23,23,23,23,23))
+# legend("bottomright", c("> min(GL)", "> 0.95", "> max(GL)"), lwd = c(1,1,1), lty = c(1,1,1), col=c(1,1,1), pch=c(22,23,24))
 dev.off()

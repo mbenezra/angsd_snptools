@@ -4,8 +4,8 @@ title: Comparison and Validation of the SNPTools Genotype Likelihood Model Using
 author: "Michael Ben Ezra (lxc844)"
 date: '2018-01-22'
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -14,9 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Abstract
 
-
-
 # Introduction
+
+Next-generation sequencing (NGS) is an inherently error prone process, yielding data which suffer from a varaiaty of potential errors, among them incorrect or low-confidence base-calling as well as errors occuring during de novo assembly or alignment to a reference genome. Since the downstream analysis of virtually all genetic and genomic studies rely heavily on genetic variant detection and the underlying genotype likelihoods, selecting a statistical model of the data that best represents the true nature of the genetic substrate is crucial to correct interpretation of results.
 
 # Materials and Methods
 
