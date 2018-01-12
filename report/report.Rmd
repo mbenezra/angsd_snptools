@@ -4,8 +4,8 @@ title: Comparison and Validation of the SNPTools Genotype Likelihood Model Using
 author: "Michael Ben Ezra (lxc844)"
 date: '2018-01-22'
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -28,9 +28,15 @@ https://github.com/mbenezra/angsd_snptools
 
 ## Analysis of next generation Sequencing Data (ANGSD)
 
-### GATK
+### GATK Genotype Likelihood Model
+
+GATK employs a simple Bayesian genotyper that calculates the posterior probability of each of the possible 10 diploid genotypes from next generation DNA sequencing reads. GATK encorporates the bases covering each locus and their respective phred quality scores.
+
+GATK calculates the prior probability of each of the possible 10 diploid genotypes $G$ given the data $D$ using Bayes' rule.
 
 $$p(G|D)=\frac{p(G)p(D|G)}{p(D)}$$
+
+$p(D)$ is constant across all genotypes and can be ignored. $p(G)$ is the prior probability of observing a genotype and can be set to a uniform prior or an allele frequency prior.
 
 $$p(D|G)=\prod_{b\in{pileup}}p(b|G)$$
 
@@ -40,13 +46,21 @@ $$p(b|A)=\left\{\begin{matrix}\frac{e}{3}:b\ne{A}\\1-e:b=A\end{matrix}\right.$$
 
 ### SAMTOOLS
 
+Quality score and quality dependency based GLs.
+
 ## SNPTools
 
 ### Effective Base Depth (EBD) calculation
 
+SNPTools calculates a read depth pseudocount termed Effective Base Depth (EBD) that weights reads based on their read quality and mapping quality. This allows SNPTools to give less weight to sequencing errors that may lead to incorrect identification of alternative alles. This is particularly problematic where read depth is low.
+
+An EBD value is calculated for each nucleotide of every locus in a sample.
+
 $$EBD_{s,g=A,C,G,T}=\sum_{k}^{K_s}(1-BaseQuality_k)\times (1-MappingQuality_k), for all k=g.$$
 
 ### SNP Site Discovery (variance ratio statistic)
+
+
 
 $$VarianceRatioStatistic=\frac{\sum_{i=1}^{I}[a_{i}-e(a_{i}+r_{i})]^{2}-Te(1-e)}{\sum_{i=1}^{I}Min\left \{ [a_{i}-0(a_{i}+r_{i})]^{2},[a_{i}-\frac{1}{2}(a_{i}+r_{i})]^{2},[a_{i}-1(a_{i}+r_{i})]^{2} \right \}}$$
 
@@ -60,9 +74,15 @@ $$e=\frac{\sum_{i}^{I}(a_{i})}{\sum_{i}^{I}(a_{i}+r_{i})}$$
 
 ### GL estimation (BAM-specific Binomial Mixture Modelling BBMM)
 
-$$GL_{s,v=rr,ra,aa}=p(a_{s}|z_{s,v},p_{v})=Binomial(r_{s}+a_{s},p_{v})$$
+Genotype likelihoods can be modelled by a binomial distribution and calculated using the binomial mass function as a series of trials represented by the effective base depth (EBD) counts $r_s + a_s$ with the success binomial probability $p_v$ of a reference read for each of the genotype classes rr=Ref/Ref, ra=Ref/Alt and aa=Alt/Alt. If sequencing was error free, the binomial probabilities of a reference read for each of the genotype classes would be 1, 0.5 and 0 respectively.
 
 $$Binomial(r_{s}+a_{s},p_{v})=\begin{bmatrix}r_{s}+a_{s}\\ a_{s}\end{bmatrix}p_{v}^{a_{s}}(1-p_{v})^{r_{s}}$$
+In reality the binomial probabilities of a reference read at each of the genotype classes deviate from the theoretical values. Moreover, general operational heterogeneity in collection of samples (ex: sequencing runs, sequencing centers, etc) contribute to variability that decreases the signal to noise ratio. For this reason SNPTools estimates BAM specific values of the binomial probabilities. In turn these BAM specific probabilities are used for calculating the GLs.
+
+SNPTools uses the Expectation Maximization algorithm to 
+
+$$GL_{s,v=rr,ra,aa}=p(a_{s}|z_{s,v},p_{v})=Binomial(r_{s}+a_{s},p_{v})$$
+
 # Results
 
 ## Depth
@@ -71,9 +91,13 @@ $$Binomial(r_{s}+a_{s},p_{v})=\begin{bmatrix}r_{s}+a_{s}\\ a_{s}\end{bmatrix}p_{
 
 ## Receiver operating characteristic (ROC)
 
+We call genotypes for variable sites identified by SNPTools for which we also have data in the hapmap. We infer the major and minor alleles from GL
+
 ![optional caption text](../scripts/roc.png)
 
 ## Site Frequency Spectrum (SFS)
+
+We calculate a folded SFS for the variable sites identified by SNPTools. We Force the major and the minor alleles to those calculated by SNPTools.
 
 ![optional caption text](../scripts/sfs.png)
 
