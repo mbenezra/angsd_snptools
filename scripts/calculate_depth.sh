@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#for sample in `cat ../indv.txt`; do echo less -S depth.$sample.txt '| cut -f3 | sort -n | uniq -c >' cut.depth.$sample.txt; done > depth.txt
+
 mkdir depth
 
 samtools depth -f bams.list | cut -f3 | sort -n | uniq -c > depth/depth.all.txt
