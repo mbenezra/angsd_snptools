@@ -1,11 +1,10 @@
 ---
-title: Comparison and Validation of the SNPTools Genotype Likelihood Model Using Low
-  Depth Data
+title: Comparison and Validation of the SNPTools Genotype Likelihood Model Using Low Depth Data
 author: "Michael Ben Ezra (lxc844)"
 date: '2018-01-22'
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -18,13 +17,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Next-generation sequencing (NGS) is an inherently error prone process, yielding data which suffer from a varaiaty of potential errors, among them incorrect or low-confidence base-calling as well as errors occuring during de novo assembly or alignment to a reference genome. Since the downstream analysis of virtually all genetic and genomic studies rely heavily on genetic variant detection and the underlying genotype likelihoods, selecting a statistical model of the data that best represents the true nature of the genetic substrate is crucial to correct interpretation of results.
 
+In particular, low-coverage data (<5X per site) on which many NGS studies rely is highly suceptible to uncertainty in variant and genotype calling. This is due to the high probability that only one of two chromosomes is sampled in diploid individuals, making it particularly difficult to detect rare mutations.
+
+The SNPTools pipeline seeks to address some of the analytical challenges in low-coverage genome sequencing data by (1) modelling the weight of each base read using both mapping and base-quality to be used in both variant calling and genotype likelihood estimation, (2) aggregating reads from all samples to identify alternative alleles (3) calling variant sites by assessing the distribution of alternative alleles across samples to minimize the influence of sequencing errors (4) calling variant sites by assessing the best genotype fit, (5) utilizing millions of putative SNP sites within each BAM to better estimate genotype class binomial probabilites from which to calculate genotype likelihoods.
+
+In this work, we compare the SNPTools genotype likelihood model to that of SAMTOOLS and GATK 
+
 # Materials and Methods
 
 ## Github
 
 https://github.com/mbenezra/angsd_snptools
 
-## 1000 Genomes Project Data (CEU population)
+## 1000 Genomes Project Data Set (CEU population)
+
+The SNPTools pipeline was applied to 90 individuals from the 1000 genomes project's CEU population.
+
+## HAPMAP
 
 ## Analysis of next generation Sequencing Data (ANGSD)
 
@@ -52,7 +61,7 @@ Quality score and quality dependency based GLs.
 
 ### Effective Base Depth (EBD) calculation
 
-SNPTools calculates a read depth pseudocount termed Effective Base Depth (EBD) that weights reads based on their read quality and mapping quality. This allows SNPTools to give less weight to sequencing errors that may lead to incorrect identification of alternative alles. This is particularly problematic where read depth is low.
+SNPTools calculates a read depth pseudocount termed Effective Base Depth (EBD) that weights reads based on their read quality and mapping quality. This allows SNPTools to assign a lower weight to base reads with high sequencing errors that may lead to incorrect identification of alternative alles. This is particularly problematic where read depth is low.
 
 An EBD value is calculated for each nucleotide of every locus in a sample.
 
@@ -74,7 +83,7 @@ $$e=\frac{\sum_{i}^{I}(a_{i})}{\sum_{i}^{I}(a_{i}+r_{i})}$$
 
 ### GL estimation (BAM-specific Binomial Mixture Modelling BBMM)
 
-Genotype likelihoods can be modelled by a binomial distribution and calculated using the binomial mass function as a series of trials represented by the effective base depth (EBD) counts $r_s + a_s$ with the success binomial probability $p_v$ of a reference read for each of the genotype classes rr=Ref/Ref, ra=Ref/Alt and aa=Alt/Alt. If sequencing was error free, the binomial probabilities of a reference read for each of the genotype classes would be 1, 0.5 and 0 respectively.
+Genotype likelihoods can be modelled as a binomial distribution and calculated using the binomial mass function as a series of trials represented by the effective base depth (EBD) counts $r_s + a_s$ with the success binomial probability $p_v$ of a reference read for each of the genotype classes rr=Ref/Ref, ra=Ref/Alt and aa=Alt/Alt. If sequencing was error free, the binomial probabilities of a reference read for each of the genotype classes would be 1, 0.5 and 0 respectively.
 
 $$Binomial(r_{s}+a_{s},p_{v})=\begin{bmatrix}r_{s}+a_{s}\\ a_{s}\end{bmatrix}p_{v}^{a_{s}}(1-p_{v})^{r_{s}}$$
 In reality the binomial probabilities of a reference read at each of the genotype classes deviate from the theoretical values. Moreover, general operational heterogeneity in collection of samples (ex: sequencing runs, sequencing centers, etc) contribute to variability that decreases the signal to noise ratio. For this reason SNPTools estimates BAM specific values of the binomial probabilities. In turn these BAM specific probabilities are used for calculating the GLs.
@@ -91,7 +100,9 @@ $$GL_{s,v=rr,ra,aa}=p(a_{s}|z_{s,v},p_{v})=Binomial(r_{s}+a_{s},p_{v})$$
 
 ## Receiver operating characteristic (ROC)
 
-We call genotypes for variable sites identified by SNPTools for which we also have data in the hapmap. We infer the major and minor alleles from GL
+
+
+Using ANGSD we call genotypes for variable sites identified by SNPTools for which we also have data in the hapmap. We infer the major and minor alleles from GL
 
 ![optional caption text](../scripts/roc.png)
 
