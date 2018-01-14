@@ -19,9 +19,9 @@ Next-generation sequencing (NGS) is an inherently error prone process, yielding 
 
 In particular, low-coverage data (<5X per site) on which many NGS studies rely is highly suceptible to uncertainty in variant and genotype calling. This is due to the high probability that only one of two chromosomes is sampled in diploid individuals, making it particularly difficult to detect rare mutations.
 
-The SNPTools pipeline seeks to address some of the analytical challenges in low-coverage genome sequencing data by (1) modelling the weight of each base read using both mapping and base-quality to be used in both variant calling and genotype likelihood estimation, (2) aggregating reads from all samples to identify alternative alleles (3) calling variant sites by assessing the distribution of alternative alleles across samples to minimize the influence of sequencing errors (4) calling variant sites by assessing the best genotype fit, (5) utilizing millions of putative SNP sites within each BAM to better estimate genotype class binomial probabilites from which to calculate genotype likelihoods.
+The SNPTools pipeline seeks to address some of the analytical challenges in low-coverage genome sequencing data by (1) modelling the weight of each base read using both mapping and base-quality; to be used in both variant calling and genotype likelihood estimation, (2) aggregating reads from all samples to identify alternative alleles (3) calling variant sites by assessing the distribution of alternative alleles across samples to minimize the influence of sequencing errors (4) calling variant sites by assessing the best genotype fit, (5) utilizing millions of putative SNP sites within each BAM to better estimate genotype class binomial probabilites from which to calculate genotype likelihoods.
 
-In this work, we compare the SNPTools genotype likelihood model to that of SAMTOOLS and GATK 
+In this work we seek to compare the SNPTools genotype likelihood model to that of SAMTOOLS and GATK under low-depth data conditions. Because the true genotype likelihoods are unknown to us we judge the accuracy of genotype likelihoods by calling genotypes and comparing to true genotypes according to the hapmap. We perform a reciever operating curve analysis based on the genotype calls and compare the results.
 
 # Materials and Methods
 
